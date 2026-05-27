@@ -45,11 +45,15 @@ def teacher_dashboard():
     with c1:
         header_dashboard()
     with c2:
-        st.subheader(f"""Welcome, {teacher_data['name']} """)
-        if st.button("Logout", type='secondary', key='loginbackbtn', shortcut="control+backspace"):
+        st.markdown(
+            f"<h2>Welcome, {teacher_data['name']}</h2>",
+            unsafe_allow_html=True
+        )
+        if st.button("Logout", type='secondary', key='loginbackbtn'):
             st.session_state['is_logged_in'] = False
             del st.session_state.teacher_data 
             st.rerun()
+            st.caption("Shortcut: Ctrl + Backspace")
 
 
     st.space()
@@ -194,6 +198,7 @@ def teacher_tab_take_attendance():
 
 
 def teacher_tab_manage_subjects():
+
     teacher_id = st.session_state.teacher_data['teacher_id']
     col1, col2 = st.columns(2)
     with col1:
@@ -212,10 +217,10 @@ def teacher_tab_manage_subjects():
                 ("🫂", "Students", sub['total_students']),
                 ("🕰️", "Classes", sub['total_classes']),
             ]
-        def share_btn():
-            if st.button(f"Share Code: {sub['name']}", key=f"share_{sub['subject_code']}", icon=":material/share:"):
-                share_subject_dialog(sub['name'], sub['subject_code'])
-            st.space()
+            def share_btn():
+                if st.button(f"Share Code: {sub['name']}", key=f"share_{sub['subject_code']}", icon=":material/share:"):
+                    share_subject_dialog(sub['name'], sub['subject_code'])
+                st.space()
 
         subject_card(
             name = sub['name'],
@@ -251,10 +256,7 @@ def teacher_tab_attendance_records():
             "is_present": bool(r.get('is_present', False))
         })
 
-
     df = pd.DataFrame(data)
-
-
 
     summary = (
         df.groupby(['ts_group', 'Time', 'Subject', 'Subject Code'])
@@ -296,9 +298,10 @@ def teacher_screen_login():
     with c1:
         header_dashboard()
     with c2:
-        if st.button("Go back to Home", type='secondary', key='loginbackbtn', shortcut="control+backspace"):
+        if st.button("Go back to Home", type='secondary', key='loginbackbtn'):
             st.session_state['login_type'] = None
             st.rerun()
+            st.caption("Shortcut: Ctrl + Backspace")
 
     st.header('Login using password', text_alignment='center')
     st.space()
@@ -314,12 +317,14 @@ def teacher_screen_login():
     btnc1, btnc2 = st.columns(2)
 
     with btnc1:
-        if st.button('Login', icon=':material/passkey:', shortcut='control+enter', width='stretch'):
+        if st.button('Login', icon=':material/passkey:', width='stretch'):
             if login_teacher(teacher_username, teacher_pass):
                 st.toast("welcome back!", icon="👋")
                 import time
                 time.sleep(1)
                 st.rerun()
+                st.caption("Shortcut: Ctrl + Enter")
+
             else:
                 st.error("Invalid username and password combo")
 
@@ -351,9 +356,10 @@ def teacher_screen_register():
     with c1:
         header_dashboard()
     with c2:
-        if st.button("Go back to Home", type='secondary', key='loginbackbtn', shortcut="control+backspace"):
+        if st.button("Go back to Home", type='secondary', key='loginbackbtn'):
             st.session_state['login_type'] = None
             st.rerun()
+            st.caption("Shortcut: Ctrl + Backspace")
 
 
 
@@ -376,7 +382,7 @@ def teacher_screen_register():
     btnc1, btnc2 = st.columns(2)
 
     with btnc1:
-        if st.button('Register now', icon=':material/passkey:', shortcut='control+enter', width='stretch'):
+        if st.button('Register now', icon=':material/passkey:', width='stretch'):
             success, message = register_teacher(teacher_username, teacher_name, teacher_pass, teacher_pass_confirm)
             if success:
                 st.success(message)
@@ -384,6 +390,7 @@ def teacher_screen_register():
                 time.sleep(2)
                 st.session_state.teacher_login_type = "login"
                 st.rerun()
+                st.caption("Shortcut: Ctrl + Enter")
             else:
                 st.error(message)
 

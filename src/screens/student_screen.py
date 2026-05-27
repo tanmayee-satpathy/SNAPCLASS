@@ -21,11 +21,15 @@ def student_dashboard():
     with c1:
         header_dashboard()
     with c2:
-        st.subheader(f"""Welcome, {student_data['name']} """)
-        if st.button("Logout", type='secondary', key='loginbackbtn', shortcut="control+backspace"):
+        st.markdown(
+        f"<h2>Welcome, {student_data['name']}</h2>",
+        unsafe_allow_html=True
+        )
+        if st.button("Logout", type='secondary', key='loginbackbtn'):
             st.session_state['is_logged_in'] = False
             del st.session_state.student_data 
             st.rerun()
+            st.caption("Shortcut: Ctrl + Backspace")
 
 
     st.space()
@@ -67,9 +71,9 @@ def student_dashboard():
 
         stats = stats_map.get(sid,{"total":0, "attended": 0} )
         def unenroll_button():
-                if st.button("Unenroll from tihs course", type='tertiary', width='stretch', icon=':material/delete_forever:'):
+                if st.button("Unenroll from tihs course", type='tertiary', width='stretch', icon=':material/delete_forever:',key=f"unenroll_{sid}"):
                     unenroll_student_to_subject(student_id, sid)
-                    st.toast(f'Unenrolled from {sub['name']} successfully!')
+                    st.toast(f'Unenrolled from {sub["name"]} successfully!')
                     st.rerun()
 
         with cols[i % 2]:
@@ -102,9 +106,10 @@ def student_screen():
     with c1:
         header_dashboard()
     with c2:
-        if st.button("Go back to Home", type='secondary', key='loginbackbtn', shortcut="control+backspace"):
+        if st.button("Go back to Home", type='secondary', key='loginbackbtn'):
             st.session_state['login_type'] = None
             st.rerun()
+            st.caption("Shortcut: Ctrl + Backspace")
 
     st.header('Login using FaceID', text_alignment='center')
     st.space()
@@ -133,7 +138,7 @@ def student_screen():
                         st.session_state.is_logged_in = True
                         st.session_state.user_role = 'student'
                         st.session_state.student_data = student
-                        st.toast(f'Welcome Back {student['name']}')
+                        st.toast(f'Welcome Back {student["name"]}')
                         time.sleep(1)
                         st.rerun()
                 else:
