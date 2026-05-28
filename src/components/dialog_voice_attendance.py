@@ -35,9 +35,22 @@ def voice_attendance_dialog(selected_subject_id):
                 st.error('No enrolled students have voice profiles registerd')
                 return
             
+            if audio_data is None:
+                st.error("Please record audio first")
+                return
+
             audio_bytes = audio_data.read()
 
-            detected_scores = process_bulk_audio(audio_bytes, candidates_dict)
+            try:
+                detected_scores = process_bulk_audio(audio_bytes, candidates_dict)
+
+            except Exception as e:
+                st.error(f"Bulk process error: {str(e)}")
+
+                import traceback
+                st.code(traceback.format_exc())
+                
+                return
 
             results, attendance_to_log  = [], []
 

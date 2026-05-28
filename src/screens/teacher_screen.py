@@ -119,8 +119,11 @@ def teacher_tab_take_attendance():
 
     with col2:
         if st.button('Add Photos', type='primary', icon=':material/photo_prints:', width='stretch'):
-            add_photos_dialog()
+            st.session_state.show_photo_dialog = True
 
+    if st.session_state.get("show_photo_dialog", False):
+        add_photos_dialog()
+        
     selected_subject_id = subject_options[selected_subject_label]
 
     st.divider()
@@ -308,9 +311,9 @@ def teacher_screen_login():
     st.space()
 
 
-    teacher_username = st.text_input("Enter username", placeholder='ananyaroy')
+    teacher_username = st.text_input("Enter username", placeholder='E.g: tanmayee26')
 
-    teacher_pass = st.text_input("Enter password", type='password', placeholder="Enter password")
+    teacher_pass = st.text_input("Enter password", type='password', placeholder="E.g: tanu@123")
 
     st.divider()
 
@@ -369,13 +372,13 @@ def teacher_screen_register():
     st.space()
 
     
-    teacher_username = st.text_input("Enter username", placeholder='ananyaroy')
+    teacher_username = st.text_input("Enter username", placeholder='E.g: tanmayee26')
 
-    teacher_name = st.text_input("Enter name", placeholder='Ananya Roy')
+    teacher_name = st.text_input("Enter name", placeholder='Tanmayee Satpathy')
 
-    teacher_pass = st.text_input("Enter password", type='password', placeholder="Enter password")
+    teacher_pass = st.text_input("Enter password", type='password', placeholder="E.g: tanu@123")
 
-    teacher_pass_confirm = st.text_input("Confirm your password", type='password', placeholder="Enter password")
+    teacher_pass_confirm = st.text_input("Confirm your password", type='password', placeholder="E.g: tanu@123")
 
     st.divider()
 
