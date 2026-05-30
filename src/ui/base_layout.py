@@ -8,6 +8,10 @@ def style_base_layout():
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+        :root{
+            --snapclass-scale:0.675;
+        }
                 
         /* Hide top bar of streamlit */
                 
@@ -16,13 +20,25 @@ def style_base_layout():
             }
                 
             .block-container{
-                padding-top:1.5rem !important;
+                padding-top:1.1rem !important;
+                padding-left:1rem !important;
+                padding-right:1rem !important;
+                max-width:1080px !important;
+                margin:0 auto !important;
+            }
+
+            @media (min-width: 900px){
+                .block-container{
+                    zoom:var(--snapclass-scale);
+                    width:calc(100% / var(--snapclass-scale)) !important;
+                    max-width:calc(1080px / var(--snapclass-scale)) !important;
+                }
             }
         
             h1{
                 font-family:'Poppins',sans-serif !important;
 
-                font-size:3.4rem !important;
+                font-size:2.8rem !important;
 
                 font-weight:700 !important;
 
@@ -34,14 +50,14 @@ def style_base_layout():
 
                 text-align:center;
 
-                margin-bottom:1.8rem !important;
+                margin-bottom:1.2rem !important;
             }
 
             h2{
 
                 font-family:'Poppins',sans-serif !important;
 
-                font-size:1.9rem !important;
+                font-size:1.55rem !important;
 
                 font-weight:600 !important;
 
@@ -49,7 +65,7 @@ def style_base_layout():
 
                 text-align:center;
 
-                margin-bottom:1rem !important;
+                margin-bottom:0.8rem !important;
             }
             
 
@@ -71,11 +87,12 @@ def style_base_layout():
                 opacity:0.92;
                 color:white !important;
 
-                padding:12px 20px !important;
+                padding:10px 16px !important;
 
                 border:none !important;
 
                 font-weight:600 !important;
+                font-size:0.98rem !important;
 
                 transition:all 0.25s ease !important;
 
@@ -103,9 +120,17 @@ def style_base_layout():
 
                 border-radius:14px !important;
 
-                padding:0.8rem !important;
+                padding:0.72rem !important;
 
-                font-size:15px !important;
+                font-size:14px !important;
+            }
+
+            .stTextInput label,
+            .stTextInput label p{
+                color:#D8CCFF !important;
+                opacity:1 !important;
+                font-weight:600 !important;
+                letter-spacing:0.2px;
             }
 
             /* Placeholder */
@@ -138,6 +163,63 @@ def style_base_layout():
 
             .stTextInput input:hover{
                 border:1px solid rgba(167,139,250,0.4) !important;
+            }
+
+            /* Selectbox - dark glass style for dashboard forms */
+            .stSelectbox label p{
+                color:#D8CCFF !important;
+                font-weight:600 !important;
+                letter-spacing:0.2px;
+            }
+
+            .stSelectbox div[data-baseweb="select"] > div{
+                background:linear-gradient(
+                    145deg,
+                    rgba(20,20,38,0.94),
+                    rgba(13,13,27,0.96)
+                ) !important;
+                border:1px solid rgba(196,181,253,0.24) !important;
+                border-radius:14px !important;
+                color:#F3EEFF !important;
+                box-shadow:
+                    0 8px 22px rgba(0,0,0,0.30),
+                    0 0 0 1px rgba(139,92,246,0.10) inset !important;
+                min-height:46px !important;
+            }
+
+            .stSelectbox div[data-baseweb="select"] div{
+                color:#F3EEFF !important;
+            }
+
+            .stSelectbox div[data-baseweb="select"] svg{
+                fill:#C4B5FD !important;
+            }
+
+            div[role="listbox"] ul{
+                background:linear-gradient(
+                    145deg,
+                    rgba(19,19,37,0.98),
+                    rgba(11,11,24,0.98)
+                ) !important;
+                border:1px solid rgba(196,181,253,0.28) !important;
+            }
+
+            div[role="listbox"] li{
+                color:#EFE9FF !important;
+            }
+
+            div[role="listbox"] li:hover{
+                background:rgba(139,92,246,0.22) !important;
+            }
+
+            div[role="listbox"] li[aria-selected="true"]{
+                background:rgba(147,51,234,0.30) !important;
+            }
+
+            @media (max-width: 1100px){
+                .block-container{
+                    max-width:980px !important;
+                }
             }
             .stApp{
                 animation:fadeIn 0.6s ease;
@@ -467,7 +549,7 @@ def style_background_home():
 
                 border: 1px solid rgba(255,255,255,0.08);
 
-                padding:2.2rem !important;
+                padding:1.6rem !important;
 
                 border-radius:2rem !important;
 

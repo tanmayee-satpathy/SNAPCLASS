@@ -1,4 +1,5 @@
 import streamlit as st
+import html as py_html
 
 from src.ui.base_layout import style_background_dashboard, style_base_layout
 
@@ -43,12 +44,12 @@ def teacher_screen():
 
 def teacher_dashboard():
     teacher_data = st.session_state.teacher_data
-    c1, c2 = st.columns([2.2,1], vertical_alignment='center', gap='medium')
+    c1, c2 = st.columns([2.0,1], vertical_alignment='center', gap='medium')
 
     with c1:
         st.markdown("""
         <h1 style='
-            font-size:2.9rem;
+            font-size:2.45rem;
             line-height:1.05;
             font-weight:700;
             color:#A78BFA;
@@ -61,7 +62,7 @@ def teacher_dashboard():
         st.markdown("""
         <p style='
             color:#9CA3AF;
-            margin-bottom:2rem;
+            margin-bottom:1.2rem;
         '>
         Manage attendance using AI-powered automation.
         </p>
@@ -72,8 +73,8 @@ def teacher_dashboard():
             f"""
             <h2 style='
                 text-align:right;
-                font-size:2rem;
-                margin-bottom:1rem;
+                font-size:1.65rem;
+                margin-bottom:0.6rem;
             '>
                 Welcome, {teacher_data['name']}
             </h2>
@@ -81,7 +82,7 @@ def teacher_dashboard():
             unsafe_allow_html=True
         )
 
-        st.markdown("<div style='margin-top:2rem'></div>", unsafe_allow_html=True)
+        st.markdown("<div style='margin-top:1rem'></div>", unsafe_allow_html=True)
 
         if st.button("Logout", type='secondary', key='loginbackbtn'):
             st.session_state['is_logged_in'] = False
@@ -92,7 +93,7 @@ def teacher_dashboard():
 
     if "current_teacher_tab" not in st.session_state:
         st.session_state.current_teacher_tab = 'take_attendance'
-    tab1, tab2, tab3 = st.columns(3, gap='small')
+    tab1, tab2, tab3 = st.columns(3, gap='medium')
 
 
     with tab1:
@@ -148,14 +149,35 @@ def teacher_tab_take_attendance():
     
     subject_options = {f"{s['name']} - {s['subject_code']}": s['subject_id'] for s in subjects}
 
-    col1, col2 = st.columns([4,1.3], vertical_alignment='bottom')
+    st.markdown(
+        """
+        <style>
+            .st-key-take-attendance-controls{
+                border:1px solid rgba(196,181,253,0.17);
+                border-radius:16px;
+                padding:14px 14px 8px 14px;
+                background:
+                    radial-gradient(circle at 10% 10%, rgba(167,139,250,0.10), transparent 35%),
+                    linear-gradient(145deg, rgba(12,12,25,0.86), rgba(8,8,20,0.92));
+                box-shadow:
+                    0 10px 24px rgba(0,0,0,0.30),
+                    0 0 0 1px rgba(139,92,246,0.10) inset;
+                margin-bottom:12px;
+            }
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
 
-    with col1:
-        selected_subject_label = st.selectbox('Select Subject', options=list(subject_options.keys()))
+    with st.container(border=False, key="take-attendance-controls"):
+        col1, col2 = st.columns([4,1.3], vertical_alignment='bottom')
 
-    with col2:
-        if st.button('Add Photos', type='primary', icon=':material/photo_prints:', width='stretch'):
-            st.session_state.show_photo_dialog = True
+        with col1:
+            selected_subject_label = st.selectbox('Select Subject', options=list(subject_options.keys()))
+
+        with col2:
+            if st.button('Add Photos', type='primary', icon=':material/photo_prints:', width='stretch'):
+                st.session_state.show_photo_dialog = True
 
     if st.session_state.get("show_photo_dialog", False):
         add_photos_dialog()
@@ -290,29 +312,32 @@ def teacher_tab_manage_subjects():
             ]
 
             
+            def share_button():
+                if st.button(
+                    f"Share Code: {sub['name']}",
+                    key=f"share_{sub['subject_code']}",
+                    icon=":material/share:",
+                    width='stretch'
+                ):
+                    share_subject_dialog(
+                        sub['name'],
+                        sub['subject_code']
+                    )
+
             subject_card(
                 name=sub['name'],
                 code=sub['subject_code'],
                 section=sub['section'],
                 stats=stats,
+                footer_callback=share_button,
             )
-
-            if st.button(
-                f"Share Code: {sub['name']}",
-                key=f"share_{sub['subject_code']}",
-                icon=":material/share:"
-            ):
-                share_subject_dialog(
-                    sub['name'],
-                    sub['subject_code']
-                )
 
             st.space()
     else:
         st.info("NO SUBJECTS FOUND. CREATE ONE ABOVE")
 
 
-def teacher_tab_attendance_records():
+def _teacher_tab_attendance_records_legacy():
     st.header('Attendance Records')
 
     teacher_id = st.session_state.teacher_data['teacher_id']
@@ -358,6 +383,101 @@ def teacher_tab_attendance_records():
     st.table(display_df)
 
 
+def teacher_tab_attendance_records():
+    st.header('Attendance Records')
+
+    teacher_id = st.session_state.teacher_data['teacher_id']
+    records = get_attendance_for_teacher(teacher_id)
+
+    if not records:
+        return
+
+    data = []
+    for r in records:
+        ts = r.get('timestamp')
+        data.append({
+            "ts_group": ts.split(".")[0] if ts else None,
+            "Time": datetime.fromisoformat(ts).strftime("%Y-%m-%d %I:%M %p") if ts else "N/A",
+            "Subject": r['subjects']['name'],
+            "Subject Code": r['subjects']['subject_code'],
+            "is_present": bool(r.get('is_present', False)),
+        })
+
+    df = pd.DataFrame(data)
+    summary = (
+        df.groupby(['ts_group', 'Time', 'Subject', 'Subject Code'])
+        .agg(
+            Present_Count=('is_present', 'sum'),
+            Total_Count=('is_present', 'count')
+        )
+        .reset_index()
+    )
+
+    summary['Attendance Stats'] = (
+        summary['Present_Count'].astype(str) + " / "
+        + summary['Total_Count'].astype(str) + " Students"
+    )
+
+    display_df = (
+        summary.sort_values(by='ts_group', ascending=False)
+        [['Time', 'Subject', 'Subject Code', 'Attendance Stats', 'Present_Count', 'Total_Count']]
+    )
+
+    rows_html = []
+    for _, row in display_df.iterrows():
+        time_val = py_html.escape(str(row['Time']))
+        subject_val = py_html.escape(str(row['Subject']))
+        code_val = py_html.escape(str(row['Subject Code']))
+        stats_text = py_html.escape(str(row['Attendance Stats']))
+        present_count = int(row['Present_Count'])
+        total_count = int(row['Total_Count'])
+        badge_bg = "rgba(16,185,129,0.18)" if present_count == total_count else "rgba(251,191,36,0.18)"
+        badge_fg = "#A7F3D0" if present_count == total_count else "#FDE68A"
+
+        rows_html.append(
+            "<tr>"
+            f"<td class='col-time'>{time_val}</td>"
+            f"<td class='col-subject'>{subject_val}</td>"
+            f"<td class='col-code'>{code_val}</td>"
+            "<td class='col-stats'>"
+            f"<span class='attendance-badge' style='background:{badge_bg};color:{badge_fg};'>{stats_text}</span>"
+            "</td>"
+            "</tr>"
+        )
+
+    table_html = (
+        "<style>"
+        ".attendance-table-wrap{border:1px solid rgba(196,181,253,0.18);border-radius:18px;overflow:hidden;"
+        "background:"
+        "radial-gradient(circle at 12% 18%, rgba(168,85,247,0.10), transparent 40%),"
+        "linear-gradient(145deg, rgba(12,12,26,0.90), rgba(8,8,20,0.95));"
+        "box-shadow:0 14px 32px rgba(0,0,0,0.38),0 0 0 1px rgba(139,92,246,0.15) inset;"
+        "backdrop-filter:blur(14px);} "
+        ".attendance-table{width:100%;border-collapse:collapse;font-size:0.98rem;} "
+        ".attendance-table thead th{text-align:left;padding:14px 16px;color:#EEE9FF;"
+        "background:linear-gradient(135deg, rgba(147,51,234,0.34), rgba(124,58,237,0.24));"
+        "border-bottom:1px solid rgba(221,214,254,0.22);font-weight:700;letter-spacing:0.2px;} "
+        ".attendance-table tbody td{padding:13px 16px;color:#F5F3FF;border-bottom:1px solid rgba(196,181,253,0.09);} "
+        ".attendance-table tbody tr:nth-child(even){background:rgba(139,92,246,0.08);} "
+        ".attendance-table tbody tr:nth-child(odd){background:rgba(255,255,255,0.025);} "
+        ".attendance-table tbody tr:hover{background:rgba(139,92,246,0.16);} "
+        ".attendance-table .col-time{color:#D6CCFF;font-weight:500;} "
+        ".attendance-table .col-subject{color:#F3EEFF;font-weight:600;} "
+        ".attendance-table .col-code{color:#D6CCFF;letter-spacing:0.3px;} "
+        ".attendance-table .col-stats{text-align:left;} "
+        ".attendance-badge{display:inline-block;border-radius:999px;padding:4px 10px;font-weight:700;font-size:0.9rem;"
+        "border:1px solid rgba(255,255,255,0.18);}"
+        "</style>"
+        "<div class='attendance-table-wrap'>"
+        "<table class='attendance-table'>"
+        "<thead><tr><th>Time</th><th>Subject</th><th>Subject Code</th><th>Attendance Stats</th></tr></thead>"
+        f"<tbody>{''.join(rows_html)}</tbody>"
+        "</table></div>"
+    )
+
+    st.markdown(table_html, unsafe_allow_html=True)
+
+
 def login_teacher(username, password):
     if not username or not password:
         return False
@@ -399,14 +519,13 @@ def teacher_screen_login():
     st.markdown("""
     <h2 style="
         text-align:center;
-        font-size:2.2rem;
-        margin-bottom:2rem;
+        font-size:1.85rem;
+        margin-bottom:1.3rem;
         color:#F3EEFF;
     ">
         Login Using Password
     </h2>
     """, unsafe_allow_html=True)
-    st.space()
     st.space()
 
     left, center, right = st.columns([0.7,4,0.7])
@@ -483,15 +602,14 @@ def teacher_screen_register():
     st.markdown("""
     <h2 style="
         text-align:center;
-        font-size:2.2rem;
-        margin-bottom:2rem;
+        font-size:1.85rem;
+        margin-bottom:1.3rem;
         color:#F3EEFF;
     ">
         Register Your Teacher Profile
     </h2>
     """, unsafe_allow_html=True)
 
-    st.space()
     st.space()
 
     left, center, right = st.columns([0.7,4,0.7])
