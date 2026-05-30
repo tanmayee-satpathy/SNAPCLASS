@@ -51,21 +51,14 @@ def style_base_layout():
 
                 margin-bottom:1rem !important;
             }
-
-            /* SUBJECT CARD TEXT */
-
-            [data-testid="stMarkdownContainer"] p,
-            [data-testid="stMarkdownContainer"] span{
-                color:#F3EEFF !important;
-            }
             
-                
-            p,label{
+
+            body,
+            .stApp{
                 font-family:'Inter',sans-serif !important;
                 color:#D6D6E7 !important;
-            }               
-            
-
+            }
+                
             .stButton > button{
                 border-radius:16px !important;
 
@@ -96,46 +89,6 @@ def style_base_layout():
 
                 box-shadow:0 4px 16px rgba(139,92,246,0.18);
             }  
-
-            /* SUBJECT CARDS */
-
-            div[data-testid="stMetric"]{
-
-                background:
-                    linear-gradient(
-                        145deg,
-                        rgba(139,92,246,0.16),
-                        rgba(91,33,182,0.08)
-                    ) !important;
-
-                border-radius:18px !important;
-
-                padding:22px !important;
-
-                border:1px solid rgba(255,255,255,0.08) !important;
-
-                box-shadow:
-                    0 8px 24px rgba(0,0,0,0.22) !important;
-            }
-
-            div[data-testid="stMetricLabel"]{
-
-                color:#D8B4FE !important;
-
-                font-size:1.05rem !important;
-
-                font-weight:700 !important;
-            }
-
-            div[data-testid="stMetricValue"]{
-
-                color:white !important;
-
-                font-size:2.6rem !important;
-
-                font-weight:900 !important;
-            }
-
 
             .stTextInput input{
                 background:rgba(255,255,255,0.92) !important;
@@ -330,23 +283,7 @@ def style_base_layout():
                 div[role="dialog"] tr:hover td {
                     background:rgba(139,92,246,0.08) !important;
                 }   
-                /* =========================
-        DARK DATAFRAME THEME
-        ========================= */
 
-        # [data-testid="stDataFrame"] {
-        #     background:rgba(255,255,255,0.03) !important;
-
-        #     border:1px solid rgba(255,255,255,0.06) !important;
-
-        #     border-radius:20px !important;
-
-        #     overflow:hidden !important;
-
-        #     box-shadow:0 8px 24px rgba(0,0,0,0.25) !important;
-        # }
-
-        /* Header */
 
         [data-testid="stDataFrame"] thead th {
             background:rgba(139,92,246,0.20) !important;
@@ -374,13 +311,112 @@ def style_base_layout():
             background:rgba(139,92,246,0.08) !important;
         }
 
-        /* Remove white blocks */
+                
+        /* =========================
+            SUBJECT CARD
+            ========================= */
 
-        [data-testid="stDataFrame"] div {
-            background:transparent !important;
-        }
+            .subject-card{
+
+                background:
+                    linear-gradient(
+                        145deg,
+                        rgba(15,15,28,0.95),
+                        rgba(24,24,40,0.88)
+                    );
+
+                border:1px solid rgba(255,215,120,0.18);
+
+                border-radius:28px;
+
+                padding:34px;
+
+                margin-bottom:32px;
+
+                backdrop-filter:blur(18px);
+
+                box-shadow:
+                    0 10px 35px rgba(0,0,0,0.35),
+                    0 0 20px rgba(255,215,120,0.04);
+
+                transition:0.3s ease;
+            }
+
+            .subject-card:hover{
+
+                transform:translateY(-4px);
+
+                border:1px solid rgba(255,215,120,0.30);
+
+                box-shadow:
+                    0 16px 40px rgba(0,0,0,0.45),
+                    0 0 28px rgba(255,215,120,0.08);
+            }
+
+            .subject-title{
+
+                text-align:center;
+
+                font-size:2.3rem;
+
+                font-weight:800;
+
+                color:white;
+
+                margin-bottom:28px;
+
+                letter-spacing:-1px;
+            }
+
+            .subject-grid{
+
+                display:grid;
+
+                grid-template-columns:1fr 1fr;
+
+                gap:22px;
+            }
+
+            .info-box{
+
+                background:
+                    linear-gradient(
+                        145deg,
+                        rgba(139,92,246,0.14),
+                        rgba(91,33,182,0.08)
+                    );
+
+                border:1px solid rgba(255,255,255,0.06);
+
+                border-radius:22px;
+
+                padding:24px;
+            }
+
+            .info-label{
+
+                color:#D8B4FE;
+
+                font-size:1rem;
+
+                font-weight:700;
+
+                margin-bottom:12px;
+            }
+
+            .info-value{
+
+                color:white;
+
+                font-size:2.6rem;
+
+                font-weight:900;
+
+                line-height:1;
+            }
         </style>
     """, unsafe_allow_html=True)
+
 
 def style_background_home():
 
