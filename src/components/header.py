@@ -42,11 +42,12 @@ def header_home():
     st.markdown("""
     <p style='
         text-align:center;
-        color:#9CA3AF;
+        color:#B8B2CC;
         font-size:16px;
         margin-top:6px;
         margin-bottom:20px;
         letter-spacing:0.5px;
+        text-shadow:0 1px 8px rgba(0,0,0,0.25);
     '>
         AI-Powered Smart Attendance Platform
     </p>

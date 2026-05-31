@@ -286,6 +286,21 @@ def style_base_layout():
                     color:#D6D6E7 !important;
                 }
 
+                div[role="dialog"] pre,
+                div[role="dialog"] code,
+                div[role="dialog"] [data-testid="stCodeBlock"] {
+                    background:rgba(255,255,255,0.95) !important;
+                    color:#111827 !important;
+                    border:1px solid rgba(196,181,253,0.24) !important;
+                    border-radius:14px !important;
+                }
+
+                div[role="dialog"] [data-testid="stCodeBlock"] span,
+                div[role="dialog"] pre span,
+                div[role="dialog"] code span {
+                    color:#111827 !important;
+                }
+
                 /* Table */
 
                 div[role="dialog"] table {
@@ -522,26 +537,26 @@ def style_background_home():
                 background:
                 radial-gradient(
                     circle at 12% 15%,
-                    rgba(168,85,247,0.75) 0%,
-                    transparent 38%
+                    rgba(168,85,247,0.48) 0%,
+                    transparent 34%
                 ),
 
                 radial-gradient(
                     circle at 88% 12%,
-                    rgba(139,92,246,0.45) 0%,
-                    transparent 28%
+                    rgba(139,92,246,0.30) 0%,
+                    transparent 26%
                 ),
 
                 radial-gradient(
                     circle at 85% 85%,
-                    rgba(251,191,36,0.20) 0%,
-                    transparent 35%
+                    rgba(251,191,36,0.12) 0%,
+                    transparent 30%
                 ),
 
                 radial-gradient(
                     circle at center,
-                    rgba(255,255,255,0.03) 0%,
-                    transparent 60%
+                    rgba(255,255,255,0.02) 0%,
+                    transparent 58%
                 ),
 
                 linear-gradient(
@@ -562,7 +577,7 @@ def style_background_home():
 
                 border: 1px solid rgba(255,255,255,0.08);
 
-                padding:1.6rem !important;
+                padding:1.35rem 1.45rem !important;
 
                 border-radius:2rem !important;
 
@@ -580,6 +595,10 @@ def style_background_home():
 
                 box-shadow:
                 0 12px 40px rgba(167,139,250,0.12);
+            }
+
+            .stApp div[data-testid="stColumn"] h2{
+                margin-bottom:0.55rem !important;
             }
 
             .stButton > button{
@@ -620,7 +639,7 @@ def style_background_home():
                 display:flex;
                 justify-content:center;
                 margin-top:1rem;
-                margin-bottom:1.2rem;
+                margin-bottom:0.9rem;
             }
 
             .portal-image img{
