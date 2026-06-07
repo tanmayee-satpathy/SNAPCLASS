@@ -202,19 +202,19 @@ http://localhost:8501
 
 ### Teacher Dashboard
 
-![Teacher Dashboard](screenshots/teacher_dashboard.png)
+![Teacher Dashboard](screenshots/teacher-dashboard.png)
 
 ### Student Dashboard
 
-![Student Dashboard](screenshots/student_dashboard.png)
+![Student Dashboard](screenshots/student-dashboard.png)
 
 ### Face Attendance
 
-![Face Attendance](screenshots/face_attendance.png)
+![Face Attendance](screenshots/face-attendance.png)
 
 ### Voice Attendance
 
-![Voice Attendance](screenshots/voice_attendance.png)
+![Voice Attendance](screenshots/voice-attendance.png)
 
 ---
 
