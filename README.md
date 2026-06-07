@@ -27,6 +27,20 @@ The system eliminates manual roll calls, reduces proxy attendance, and provides 
 
 ---
 
+## 🌐 Live Demo
+
+<div align="center">
+
+🚀 **Try SnapClass Live**
+
+### https://snap-class-landing-page-three.vercel.app/
+
+[![Live Demo](https://img.shields.io/badge/Launch-SnapClass-success?style=for-the-badge&logo=vercel)](https://snap-class-landing-page-three.vercel.app/)
+
+</div>
+
+---
+
 ## 🚀 Features
 
 ### 👨‍🏫 Teacher Module
@@ -74,38 +88,48 @@ The system eliminates manual roll calls, reduces proxy attendance, and provides 
 
 ---
 
-## 🏗 System Architecture
+## 🏗️ System Architecture
 
 ```text
-Teacher/Student
-      │
-      ▼
+                    Teacher / Student
+                            │
+                            ▼
 
- Streamlit UI
-      │
-      ▼
+                     Streamlit UI
+                            │
+                            ▼
 
-Business Logic
-      │
+                     Business Logic
+                            │
+          ┌─────────────────┴─────────────────┐
+          │                                   │
+          ▼                                   ▼
 
- ┌────┴─────┐
- ▼          ▼
+   Face Recognition                    Voice Recognition
+      Pipeline                              Pipeline
 
-Face      Voice
-Pipeline  Pipeline
+          │                                   │
+          ▼                                   ▼
 
- ▼          ▼
+    Face Embeddings                    Voice Embeddings
+    SVM Classification                 Speaker Verification
 
-Embeddings & Models
+          └───────────────┬───────────────────┘
+                          ▼
 
-      ▼
+                     Database Layer
+                       (db.py)
 
-  Supabase
+                          ▼
 
-      ▼
+                       Supabase
 
-Attendance Logs
+                          ▼
+
+                   Attendance Logs
 ```
+
+---
 
 ## 📂 Project Structure
 
@@ -244,17 +268,6 @@ http://localhost:8501
 - subjects
 - subject_students
 - attendance_logs
-
----
-
-## 🎯 Resume Highlights
-
-- Built an AI-powered attendance management system using Face Recognition and Voice Recognition.
-- Developed face and voice embedding pipelines.
-- Integrated Machine Learning models for attendance automation.
-- Designed a complete teacher-student attendance workflow.
-- Implemented cloud database integration using Supabase.
-- Built a production-ready Streamlit application.
 
 ---
 
