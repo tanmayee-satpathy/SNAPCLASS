@@ -153,7 +153,7 @@ def style_base_layout():
                 opacity:1 !important;
             }
 
-            /* Focus */
+            /* Focus - when user clicks*/
 
             .stTextInput input:focus{
                 border:1px solid #A78BFA !important;
@@ -568,7 +568,9 @@ def style_background_home():
 
                 color:white;
             }
-
+                
+            # student & teacher portal
+                
             div[data-testid="stColumn"]{
 
                 background: rgba(22,22,29,0.72) !important;

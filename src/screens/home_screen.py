@@ -5,7 +5,7 @@ from src.ui.base_layout import style_base_layout,style_background_home
 
 def home_screen():
 
-    header_home()
+    header_home() # logo, navbar , heading
 
     style_background_home()
     style_base_layout()
@@ -26,8 +26,8 @@ def home_screen():
             "Student Portal",
             type="primary",
             icon=':material/arrow_outward:',
-            icon_position="right",
-            use_container_width=True
+            icon_position="right", # placed after text
+            use_container_width=True # button use full column width
         ):
             st.session_state['login_type'] = 'student'
             st.rerun()
@@ -52,6 +52,8 @@ def home_screen():
             st.session_state['login_type'] = 'teacher'
             st.rerun()
 
+
+    # add vertical space before footer
     st.markdown("<br><br>", unsafe_allow_html=True)
 
     footer_home()

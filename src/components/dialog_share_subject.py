@@ -1,6 +1,5 @@
 import streamlit as st
-
-import segno
+import segno # QR code generation library
 import io
 
 

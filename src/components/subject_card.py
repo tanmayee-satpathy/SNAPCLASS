@@ -1,10 +1,10 @@
 import html
-
 import streamlit as st
 
-
+# prvt func - generate unique streamlit key
 def _subject_card_key(name, code, section):
     raw = f"{name}-{code}-{section}".lower()
+    # remove special ch
     safe = "".join(ch if ch.isalnum() else "-" for ch in raw)
     return f"subject-card-{safe.strip('-') or 'item'}"
 
@@ -24,7 +24,7 @@ def subject_card(name, code, section, stats=None, footer_callback=None):
     stats = stats or [("", "", 0), ("", "", 0)]
     students = stats[0][2] if len(stats) > 0 and len(stats[0]) > 2 else 0
     classes = stats[1][2] if len(stats) > 1 and len(stats[1]) > 2 else 0
-
+# protects from HTML injection
     safe_name = html.escape(str(name))
     safe_code = html.escape(str(code))
     safe_section = html.escape(str(section))
@@ -94,7 +94,7 @@ def subject_card(name, code, section, stats=None, footer_callback=None):
             ),
             unsafe_allow_html=True,
         )
-
+# subject code & section
         col1, col2 = st.columns(2)
         with col1:
             st.markdown(
@@ -117,8 +117,10 @@ def subject_card(name, code, section, stats=None, footer_callback=None):
                 unsafe_allow_html=True,
             )
 
+# adds vertical gap
         st.markdown("<div style='height:12px;'></div>", unsafe_allow_html=True)
 
+# students & classes
         col3, col4 = st.columns(2)
         with col3:
             st.markdown(

@@ -1,34 +1,32 @@
-
-
-import dlib
+import dlib  # c++/python library for face detection -- > convert face to 128 dimn vector
 import numpy as np
 import face_recognition_models
-from sklearn.svm import SVC
+from sklearn.svm import SVC # classify face based on embedding patterns
 import streamlit as st
 
 from src.database.db import get_all_students
 
-
-@st.cache_resource
-def load_dlib_models():
+@st.cache_resource # prevents from reloading model repeatedly
+def load_dlib_models(): # loads detector,predictor,face embdd model
     detector = dlib.get_frontal_face_detector() 
 
-
-    sp = dlib.shape_predictor(
+    sp = dlib.shape_predictor( # detects 68 landmark pts like nose,eye,jaw,lips
         face_recognition_models.pose_predictor_model_location()
     )
 
+    # convert face to embedding vector which gets stored in numpy arr
     facerec = dlib.face_recognition_model_v1(
         face_recognition_models.face_recognition_model_location()
     )
 
     return detector, sp, facerec
 
-def get_face_embeddings(image_np):
-    detector, sp, facerec = load_dlib_models()
-    faces = detector(image_np, 1)
+def get_face_embeddings(image_np): # takes img as numpy ararys
+    detector, sp, facerec = load_dlib_models() # loads cached models
+    faces = detector(image_np, 1) # returns all detected faces
+  # 1 - upsampling count --> higher val mens detects smaller faces
 
-    encodings= []
+    encodings= [] # stores embedding 
 
     for face in faces:
         shape = sp(image_np, face)
@@ -39,9 +37,8 @@ def get_face_embeddings(image_np):
 
 @st.cache_resource
 def get_trained_model():
-    X = []
-    y = []
-
+    X = [] # i/p - face embedding
+    y = [] # o/p - student id
 
     student_db = get_all_students()
 
@@ -67,7 +64,7 @@ def get_trained_model():
     return {'clf': clf, 'X':X, "y":y}
 
 
-def train_classifier():
+def train_classifier(): # retrain model after new student reg
     st.cache_resource.clear()
     model_data = get_trained_model()
     return bool(model_data)
@@ -76,7 +73,6 @@ def predict_attendance(class_image_np):
     encodings = get_face_embeddings(class_image_np)
 
     detected_student = {}
-
 
     model_data = get_trained_model()
 
@@ -87,6 +83,7 @@ def predict_attendance(class_image_np):
     X_train = model_data['X']
     y_train = model_data['y']
 
+#  get unique student ids
     all_students = sorted(list(set(y_train)))
 
     for encoding in encodings:
@@ -97,6 +94,7 @@ def predict_attendance(class_image_np):
 
         student_embedding = X_train[y_train.index(predicted_id)]
 
+#   compute euclidean dist
         best_match_score = np.linalg.norm(student_embedding - encoding)
 
         resemblance_threshold = 0.6
@@ -105,3 +103,18 @@ def predict_attendance(class_image_np):
             detected_student[predicted_id] = True
     return detected_student, all_students, len(encodings)
 
+# flow --->
+
+# classroom img 
+#      |
+# face detection
+#      |
+# landmark detection
+#      |
+# 128D embedding generation 
+#      |
+# svm classification
+#      |
+# dist verify
+#      |
+# attendance marked

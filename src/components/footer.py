@@ -1,6 +1,6 @@
 import streamlit as st
 
-
+# follows DRY principle  - Don't Repeat Yourself
 def footer_home():
     st.markdown(
         (
@@ -23,3 +23,6 @@ def footer_dashboard():
         ),
         unsafe_allow_html=True,
     )
+
+
+#  2 footer func instead of 1 as diff screens require diff spacing and styling

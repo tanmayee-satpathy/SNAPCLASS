@@ -2,17 +2,21 @@ import streamlit as st
 import base64
 import html as py_html
     
+
+# convert img file into base64 string
 def get_base64_image(image_path):
     with open(image_path, "rb") as img_file:
         return base64.b64encode(img_file.read()).decode()
-def header_home():
+    
 
+def header_home():
     logo_path = "assets/logo.png"
 
+    # logo
     st.markdown(f"""
     <div style="
         display:flex;
-        justify-content:center;
+        justify-content:center; 
         width:100%;
         margin-top:6px;
         margin-bottom:8px;
@@ -22,6 +26,7 @@ def header_home():
     </div>
     """, unsafe_allow_html=True)
 
+    # title
     st.markdown("""
     <div style='
         text-align:center;
@@ -31,7 +36,10 @@ def header_home():
         letter-spacing:-3px;
         margin-top:-6px;
         margin-bottom:0px;
-        background: linear-gradient(135deg,#FFFFFF,#C4B5FD,#8B5CF6);
+        background: linear-gradient(135deg,#FFFFFF,#C4B5FD,#8B5CF6); 
+        
+        # makes gradient appear inside text
+                
         -webkit-background-clip:text;
         -webkit-text-fill-color:transparent;
     '>
@@ -39,6 +47,7 @@ def header_home():
     </div>
     """, unsafe_allow_html=True)
 
+    # tagline
     st.markdown("""
     <p style='
         text-align:center;
@@ -53,6 +62,7 @@ def header_home():
     </p>
     """, unsafe_allow_html=True)
 
+
 def header_dashboard(title="Teacher Dashboard"):
     safe_title = py_html.escape(str(title))
 
@@ -66,6 +76,4 @@ def header_dashboard(title="Teacher Dashboard"):
     '>
         {safe_title}
     </h1>
-    """, unsafe_allow_html=True)
-
-    
+    """, unsafe_allow_html=True)  

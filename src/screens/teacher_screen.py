@@ -6,6 +6,7 @@ from src.ui.base_layout import style_background_dashboard, style_base_layout
 from src.components.header import header_dashboard
 from src.components.footer import footer_dashboard
 from src.components.subject_card import subject_card
+
 from src.database.db import check_teacher_exists, create_teacher, teacher_login, get_teacher_subjects, get_attendance_for_teacher
 from src.components.dialog_create_subject import create_subject_dialog
 from src.components.dialog_share_subject import share_subject_dialog
@@ -13,17 +14,15 @@ from src.components.dialog_add_photo import add_photos_dialog
 
 from src.pipelines.face_pipeline import predict_attendance
 from src.components.dialog_attendance_results import attendance_result_dialog
-import numpy as np
+import numpy as np # img to numpy array
 
-from datetime import datetime
+from datetime import datetime # attendance timestamp
 
 import pandas as pd
 
 from src.database.config import supabase
 
-
 from src.components.dialog_voice_attendance import voice_attendance_dialog
-
 
 
 def teacher_screen():
@@ -31,6 +30,7 @@ def teacher_screen():
     style_background_dashboard()
     style_base_layout()
 
+# if teacher already logged in
     if "teacher_data" in st.session_state:
         teacher_dashboard()
     elif 'teacher_login_type' not in st.session_state or st.session_state.teacher_login_type=="login":
@@ -39,14 +39,12 @@ def teacher_screen():
         teacher_screen_register()
 
 
-
-
-
 def teacher_dashboard():
     teacher_data = st.session_state.teacher_data
     c1, c2 = st.columns([2.0,1], vertical_alignment='center', gap='medium')
 
     with c1:
+        # dashboard title
         st.markdown("""
         <h1 style='
             font-size:2.45rem;
@@ -59,6 +57,7 @@ def teacher_dashboard():
         </h1>
         """, unsafe_allow_html=True)
 
+        # subtitle
         st.markdown("""
         <p style='
             color:#9CA3AF;
@@ -67,8 +66,10 @@ def teacher_dashboard():
         Manage attendance using AI-powered automation.
         </p>
         """, unsafe_allow_html=True)
+
     with c2:
         st.markdown("<div style='margin-top:1.2rem'></div>", unsafe_allow_html=True)
+        # welcome text
         st.markdown(
             f"""
             <h2 style='
@@ -83,16 +84,17 @@ def teacher_dashboard():
         )
 
         st.markdown("<div style='margin-top:1rem'></div>", unsafe_allow_html=True)
-
+        # logout button
         if st.button("Logout", type='secondary', key='loginbackbtn'):
             st.session_state['is_logged_in'] = False
             del st.session_state.teacher_data 
             st.rerun()
             st.caption("Shortcut: Ctrl + Backspace")
 
-
+# default tab
     if "current_teacher_tab" not in st.session_state:
         st.session_state.current_teacher_tab = 'take_attendance'
+
     tab1, tab2, tab3 = st.columns(3, gap='medium')
 
 
@@ -124,14 +126,14 @@ def teacher_dashboard():
         "></div>
         """, unsafe_allow_html=True)
 
+
     if st.session_state.current_teacher_tab == "take_attendance":
         teacher_tab_take_attendance()
     if st.session_state.current_teacher_tab == "manage_subjects":
         teacher_tab_manage_subjects()
     if st.session_state.current_teacher_tab == "attendance_records":
         teacher_tab_attendance_records()
-
-    
+   
 
 def teacher_tab_take_attendance():
     teacher_id = st.session_state.teacher_data['teacher_id']
@@ -220,11 +222,12 @@ def teacher_tab_take_attendance():
                 disabled=not has_photos
             ):
 
+            # shows loading animation
                 with st.spinner('Deep scanning classroom photos...'):
                     all_detected_ids = {}
 
                     for idx, img in enumerate(st.session_state.attendance_images):
-                        img_np = np.array(img.convert('RGB'))
+                        img_np = np.array(img.convert('RGB')) # PIL img --> numpy RGB array
                         detected, _, _ = predict_attendance(img_np)
 
                         if detected:
@@ -354,6 +357,7 @@ def _teacher_tab_attendance_records_legacy():
 
         data.append({
             "ts_group": ts.split(".")[0] if ts else None,
+            # convert timestamp string to datetime object
             "Time": datetime.fromisoformat(ts).strftime("%Y-%m-%d %I:%M %p") if ts else "N'A",
             "Subject": r['subjects']['name'],
             "Subject Code":r['subjects']['subject_code'],
@@ -555,10 +559,6 @@ def teacher_screen_login():
             if st.button('Register Instead', type="primary", icon=':material/passkey:', width='stretch'):
                 st.session_state.teacher_login_type = 'register'
 
-   
-    
-
-
 
 def register_teacher(teacher_username, teacher_name, teacher_pass, teacher_pass_confirm):
     if not teacher_username or not teacher_name or not teacher_pass:
@@ -672,5 +672,3 @@ def teacher_screen_register():
     with btnc2:
         if st.button('Login Instead', type="primary", icon=':material/passkey:', width='stretch'):
             st.session_state.teacher_login_type = 'login'
-    
-    

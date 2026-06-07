@@ -2,7 +2,7 @@ import streamlit as st
 from src.database.db import create_subject
 
 
-@st.dialog("Create New Subject")
+@st.dialog("Create New Subject") # to collect user i/p inn a popup window without navigationg away from current page
 def create_subject_dialog(teacher_id):
 
     st.write("Enter the details of new subject")

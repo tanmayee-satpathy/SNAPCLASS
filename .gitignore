@@ -1,11 +1,18 @@
+# Files containing password,api keys and huge...shouldn't be uploaded to Github
+
+
 .env
 .vscode
 
-*.pyc
+# pattern & pyc - python compiledd file
+*.pyc 
+
+# special python cache folder - stores compiled python bytecode
 __pycache__/
 
 venv/
 
 .streamlit/
 
+# build / output files
 dist/

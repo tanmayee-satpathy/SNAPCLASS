@@ -1,8 +1,9 @@
 from src.database.config import supabase
-import bcrypt
+import bcrypt # password hashing library
 
 
 def hash_pass(pwd):
+    # encode string to bytes , generate random salt , convert bytes to string
     return bcrypt.hashpw(pwd.encode(),bcrypt.gensalt()).decode()
 
 

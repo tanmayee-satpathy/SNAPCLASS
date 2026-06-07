@@ -5,10 +5,12 @@ sys.path.append(os.path.abspath("./src"))
 
 import streamlit as st
 
+# scalability, maintainability, modularity
 from src.screens.home_screen import home_screen
 from src.screens.student_screen import student_screen
 from src.screens.teacher_screen import teacher_screen
 
+# components - reusable UI logic
 from src.components.dialog_auto_enroll import auto_enroll_dialog
 
 def main():
@@ -20,6 +22,7 @@ def main():
     if 'login_type' not in st.session_state:
         st.session_state['login_type'] = None
 
+# like switch-case
     match st.session_state['login_type']:
         case 'teacher':
             teacher_screen()
@@ -31,10 +34,14 @@ def main():
             home_screen()      
 
     join_code = st.query_params.get('join-code')
+    # check if url contains join code
     if join_code:
+        # if not student screen
         if st.session_state.login_type != 'student':
+            # force student mode
             st.session_state.login_type = 'student'
             st.rerun()
+            
         if st.session_state.get('is_logged_in') and st.session_state.get('user_role') == 'student':
             auto_enroll_dialog(join_code)
             

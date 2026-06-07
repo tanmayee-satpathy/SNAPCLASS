@@ -9,6 +9,7 @@ from src.components.dialog_enroll import enroll_dialog
 from src.components.footer import footer_dashboard
 from src.components.header import header_dashboard
 from src.components.subject_card import subject_card
+
 from src.database.db import (
     create_student,
     get_all_students,

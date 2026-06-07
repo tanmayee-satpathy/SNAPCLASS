@@ -1,11 +1,11 @@
-from resemblyzer import VoiceEncoder,preprocess_wav
+from resemblyzer import VoiceEncoder,preprocess_wav  # create speaker embedding
 import numpy as np
-import io
+import io # input-output module -- treat bytes as file
 import librosa 
 import streamlit as st
 
 
-@st.cache_resource
+@st.cache_resource  # stores model in memory
 def load_voice_encoder():
     return VoiceEncoder()
 
@@ -13,9 +13,10 @@ def load_voice_encoder():
 def get_voice_embedding(audio_bytes):
     try:
         encoder = load_voice_encoder()
+        # sr -- sampling rate
         audio , sr = librosa.load(io.BytesIO(audio_bytes),sr=16000)
-        wav = preprocess_wav(audio)
-        embedding = encoder.embed_utterance(wav)
+        wav = preprocess_wav(audio) # cleans voice
+        embedding = encoder.embed_utterance(wav) # voice - 256D vector
         return embedding.tolist()
     except Exception as e:
         st.error("Voice recog error")
@@ -46,12 +47,12 @@ def process_bulk_audio(audio_bytes,candidates_dict,threshold=0.65):
         encoder = load_voice_encoder()
 
         audio,sr = librosa.load(io.BytesIO(audio_bytes),sr=16000)
-        segments = librosa.effects.split(audio,top_db=30)
+        segments = librosa.effects.split(audio,top_db=30) # separate speech from silence
 
         identified_results = {}
 
         for start,end in segments:
-            if (end - start) < sr * 0.5:
+            if (end - start) < sr * 0.5: # ignore shorter clips
                 continue
 
             segment_audio = audio[start:end]
@@ -68,3 +69,23 @@ def process_bulk_audio(audio_bytes,candidates_dict,threshold=0.65):
     except Exception as e:
         st.error("Bulk process error")
         return {}       
+    
+# flow
+
+# audio upload
+#      |
+# librosa load 
+#      |
+# preprocess audio 
+#      |
+# resemblyzer encoder 
+#      |
+# 256D voice embedding 
+#      |
+# compare wd stored embedding 
+#      |
+# dot prod similarity
+#      |
+# threshold check 
+#      |
+# attendance marked
